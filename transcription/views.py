@@ -16,6 +16,16 @@ MAX_UPLOAD_SIZE = getattr(settings, "FILE_UPLOAD_MAX_MEMORY_SIZE", 50 * 1024 * 1
 
 
 class HealthCheckView(APIView):
+    @swagger_auto_schema(
+        operation_summary="Health check",
+        operation_description="Returns service health status. Used by Docker and load balancers.",
+        responses={
+            200: openapi.Response(
+                description="Service is healthy",
+                examples={"application/json": {"status": "ok"}},
+            )
+        },
+    )
     def get(self, request):
         return Response({"status": "ok"})
 
