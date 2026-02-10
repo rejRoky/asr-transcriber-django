@@ -60,7 +60,7 @@ WSGI_APPLICATION = "asr_backend.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "NAME": Path(os.getenv("DB_DIR", BASE_DIR)) / "db.sqlite3",
         "CONN_MAX_AGE": 600,
     }
 }

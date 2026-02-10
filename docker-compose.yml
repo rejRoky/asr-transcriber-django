@@ -6,7 +6,7 @@ services:
     env_file:
       - .env
     volumes:
-      - db-data:/app/db.sqlite3
+      - db-data:/app/data
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/api/health/"]
       interval: 30s
