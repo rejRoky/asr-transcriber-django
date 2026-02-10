@@ -1,12 +1,26 @@
+import io
 from faster_whisper import WhisperModel
 
-def transcribe_local(audio_bytes: bytes, language: str = None) -> dict:
-    model = WhisperModel("tiny", compute_type="int8")
-    segments, _ = model.transcribe(audio_bytes, language=language, word_timestamps=True)
+_model = None
 
-    output = {"text": "", "segments": []}
+
+def _get_model():
+    global _model
+    if _model is None:
+        _model = WhisperModel("tiny", compute_type="int8")
+    return _model
+
+
+def transcribe_local(audio_bytes: bytes, language: str = None) -> dict:
+    model = _get_model()
+    segments, _ = model.transcribe(
+        io.BytesIO(audio_bytes), language=language, word_timestamps=True
+    )
+
+    texts = []
+    output_segments = []
     for i, seg in enumerate(segments):
-        output["segments"].append({
+        output_segments.append({
             "id": i,
             "start": seg.start,
             "end": seg.end,
@@ -16,5 +30,6 @@ def transcribe_local(audio_bytes: bytes, language: str = None) -> dict:
                 for w in seg.words or []
             ]
         })
-        output["text"] += seg.text + " "
-    return output
+        texts.append(seg.text)
+
+    return {"text": " ".join(texts), "segments": output_segments}
