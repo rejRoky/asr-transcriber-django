@@ -4,3 +4,4 @@ python-dotenv
 faster-whisper==0.7.0
 openai==0.28
 drf-yasg
+gunicorn
